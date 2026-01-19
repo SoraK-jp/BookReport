@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>読書感想文作成</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app-body">
+    <div class="app-container">
+        <div class="card">
+            <header>
+                <h1>AI読書感想文生成</h1>
+            </header>
+            <div class="card-content">
+                <div class="input-grid">
+                    <!-- 本のタイトル -->
+                    <div class="form-group">
+                        <label for="title" class="label">本のタイトル</label>
+                        <input type="text" id="title" class="input-field" placeholder="例： 吾輩は猫である">
+                    </div>
+                    <!-- 著者名 -->
+                    <div class="form-group">
+                        <label for="author" class="label">著者名</label>
+                        <input type="text" id="author" class="input-field" placeholder="例： 夏目漱石">
+                    </div>
+                </div>
+
+                <!-- 感想文の焦点 -->
+                <div class="form-group">
+                    <label for="focus" class="label">感想文の焦点・テーマ</label>
+                    <textarea id="focus" class="input-field textarea" placeholder="例： 独特の視点から描かれる人間社会への風刺について"></textarea>
+                </div>
+
+                 <!-- 生成ボタン -->
+                <button id="generateBtn" class="primary-button">読書感想文を生成する</button>
+
+                 <!-- ローディング表示 -->
+                <div id="loader" class="loader hidden">
+                    <div class="spinner">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <p class="loader-text">AIが本を分析して執筆しています...</p>
+                </div>
+
+                <!-- 結果表示 -->
+                <div id="resultContainer" class="result-area hidden">
+                    <div class="result-header">
+                        <h2 class="result-title">生成結果</h2>
+                        <span class="badge">約400文字</span>
+                    </div>
+                    <div id="resultText" class="result-box">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
