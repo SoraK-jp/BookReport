@@ -46,50 +46,87 @@ Google Gemini APIを活用した、AI駆動の読書感想文自動生成Webア�
 
 ### システムアーキテクチャ図
 
-```
-┌─────────────────┐
-│   ユーザー      │
-└────────┬────────┘
-         │ HTTP
-         ▼
-┌─────────────────────────────┐
-│  フロントエンド (Public/)   │
-│  ┌─────────────────────┐   │
-│  │  index.html         │   │
-│  │  css/style.css      │   │
-│  │  js/app.js          │   │
-│  └─────────────────────┘   │
-└──────────┬──────────────────┘
-           │ POST /api/generate-review
-           ▼
-┌─────────────────────────────┐
-│  バックエンド (server.js)   │
-│  ┌─────────────────────┐   │
-│  │  Express Router     │   │
-│  │  ├─ Validation      │   │
-│  │  ├─ Prompt Builder  │   │
-│  │  └─ Error Handler   │   │
-│  └─────────────────────┘   │
-└──────────┬──────────────────┘
-           │ API Call
-           ▼
-┌─────────────────────────────┐
-│  Gemini API                 │
-│  ┌─────────────────────┐   │
-│  │  Gemini 2.5 Flash   │   │
-│  │  + Google Search    │   │
-│  └─────────────────────┘   │
-└─────────────────────────────┘
+```mermaid
+graph TB
+    subgraph client["クライアント層"]
+        User(["👤 ユーザー"])
+    end
+    
+    subgraph frontend["フロントエンド (Public/)"]
+        HTML["📄 index.html"]
+        CSS["🎨 css/style.css"]
+        JS["⚙️ js/main.js"]
+    end
+    
+    subgraph backend["バックエンド (server.js)"]
+        Express["Express Server"]
+        Router["Express Router"]
+        Validation["Validation<br/>Layer"]
+        Prompt["Prompt<br/>Builder"]
+        ErrorHandler["Error<br/>Handler"]
+    end
+    
+    subgraph external["外部API"]
+        Gemini["🤖 Gemini 2.5 Flash"]
+        GoogleSearch["🔍 Google Search"]
+    end
+    
+    User -->|HTTP| frontend
+    HTML -.->|参照| CSS
+    HTML -.->|使用| JS
+    JS -->|POST<br/>/api/generate-review| Router
+    Router --> Validation
+    Router --> Prompt
+    Router --> ErrorHandler
+    Validation -.->|検証| Prompt
+    Prompt -->|API Call| Gemini
+    Gemini -->|利用| GoogleSearch
+    Gemini -->|レスポンス| ErrorHandler
+    ErrorHandler -->|JSON| JS
+    
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef fe fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef be fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef ext fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    
+    class User user
+    class HTML,CSS,JS fe
+    class Express,Router,Validation,Prompt,ErrorHandler be
+    class Gemini,GoogleSearch ext
 ```
 
 ### データフロー図
 
-```
-[入力] → [検証] → [プロンプト生成] → [AI処理] → [テキスト抽出] → [出力]
-   │        │           │              │            │             │
-   │        └─NG────→ [エラー]         │            │             │
-   │                                   └─失敗───→ [エラー]        │
-   └──────────────────────────────────────────────────────────→ [UI表示]
+```mermaid
+graph LR
+    Input["📥 入力<br/>(書籍情報・焦点)"]
+    Validation["✔️ 検証<br/>(バリデーション)"]
+    PromptGen["📝 プロンプト生成"]
+    AIProcess["🤖 AI処理<br/>(Gemini API)"]
+    TextExtract["📄 テキスト抽出"]
+    Output["📤 出力<br/>(JSON)"]
+    UIDisplay["🖥️ UI表示"]
+    ErrorHandle["⚠️ エラー処理"]
+    
+    Input --> Validation
+    Validation -->|NG| ErrorHandle
+    Validation -->|OK| PromptGen
+    PromptGen --> AIProcess
+    AIProcess -->|失敗| ErrorHandle
+    AIProcess -->|成功| TextExtract
+    TextExtract --> Output
+    Output --> UIDisplay
+    ErrorHandle --> UIDisplay
+    
+    classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef process fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef output fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef error fill:#ffebee,stroke:#c62828,stroke-width:2px
+    
+    class Input input
+    class Validation,PromptGen,AIProcess,TextExtract process
+    class Output,UIDisplay output
+    class ErrorHandle error
 ```
 
 ### コンポーネント構成
