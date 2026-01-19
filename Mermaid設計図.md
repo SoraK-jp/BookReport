@@ -151,53 +151,46 @@ classDiagram
 ```mermaid
 graph TB
     subgraph システム境界["読書感想文生成システム"]
-        UC1[読書感想文を生成する]
-        UC2[書籍情報を入力する]
-        UC3[感想の焦点を指定する]
-        UC4[生成結果を表示する]
-        UC5[エラーを処理する]
-        UC6[書籍情報を検索する]
-        UC7[感想文を執筆する]
-        UC8[入力値を検証する]
-        UC9[システム状態を確認する]
+        UC1["読書感想文を<br/>生成する"]
+        UC2["書籍情報を<br/>入力する"]
+        UC3["感想の焦点を<br/>指定する"]
+        UC4["生成結果を<br/>表示する"]
+        UC5["エラーを<br/>処理する"]
+        UC6["書籍情報を<br/>検索する"]
+        UC7["感想文を<br/>執筆する"]
+        UC8["入力値を<br/>検証する"]
+        UC9["システム状態を<br/>確認する"]
     end
     
-    %% アクター
-    User([ユーザー])
-    GeminiAPI([Gemini API])
-    GoogleSearch([Google検索])
+    User(["👤 ユーザー"])
+    GeminiAPI(["🤖 Gemini API"])
+    GoogleSearch(["🔍 Google検索"])
     
-    %% ユーザーとユースケースの関係
     User -->|実行| UC1
     User -->|入力| UC2
     User -->|指定| UC3
     User -->|閲覧| UC4
     User -->|確認| UC9
-    
-    %% ユースケース間の関係
-    UC1 ..>|include| UC2
-    UC1 ..>|include| UC3
-    UC1 ..>|include| UC8
-    UC1 ..>|include| UC6
-    UC1 ..>|include| UC7
-    UC1 ..>|include| UC4
-    
-    UC8 ..>|extend 失敗時| UC5
-    UC6 ..>|extend 失敗時| UC5
-    UC7 ..>|extend 失敗時| UC5
-    
-    %% 外部システムとの関係
+    UC1 -.->|include| UC2
+    UC1 -.->|include| UC3
+    UC1 -.->|include| UC8
+    UC1 -.->|include| UC6
+    UC1 -.->|include| UC7
+    UC1 -.->|include| UC4
+    UC8 -.->|extend| UC5
+    UC6 -.->|extend| UC5
+    UC7 -.->|extend| UC5
     UC6 -->|依頼| GoogleSearch
     UC7 -->|依頼| GeminiAPI
     GeminiAPI -->|利用| GoogleSearch
     
-    %% スタイル
-    classDef actorStyle fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    classDef ucStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef systemStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
+    classDef actor fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef usecase fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef system fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
     
-    class User,GeminiAPI,GoogleSearch actorStyle
-    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9 ucStyle
+    class User,GeminiAPI,GoogleSearch actor
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9 usecase
+    class システム境界 system
 ```
 
 **ユースケース詳細:**
